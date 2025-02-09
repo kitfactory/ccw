@@ -1,0 +1,15 @@
+# Window configuration // ウィンドウの設定
+window:
+    x: 1500   # X position // X座標
+    y: 10     # Y position // Y座標
+
+# Cursor configuration // カーソルの設定
+cursor:
+    x: 1877  # Cursor X position // カーソルのX座標
+    y: 932   # Cursor Y position // カーソルのY座標
+
+# Keyword configuration // キーワードの設定
+keyword:
+    trigger: "エンター"  # Activation keyword // 起動キーワード
+
+

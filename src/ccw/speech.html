@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Meta Configuration // メタ設定 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech Recognition</title>
+  <style>
+    /* Global styles // 全体スタイル */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      font-size: 14px;
+      height: 100px; /* Window height set to 100px // ウィンドウの高さを100pxに設定 */
+      overflow: hidden; /* Hide overflow to avoid scrollbars // オーバーフローを隠してスクロールバーを回避 */
+      display: flex;
+      flex-direction: column;
+    }
+    /* Top row: State area and Button // 上段：状態エリアとボタン */
+    #topRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 10px; /* Reduced padding for smaller height // 小さい高さに合わせたパディング */
+      background: #222;
+    }
+    #stateArea {
+      font-size: 16px;
+      color: gray; /* Default: Standby state // デフォルト：Standby状態 */
+    }
+    #start {
+      padding: 5px 10px;
+      border: none;
+      background-color: black;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    /* Recognition message area // 認識メッセージエリア */
+    #messageArea {
+      height: 30px; /* Fixed height for about two lines of text // 約2行分の固定高さ */
+      background-color: black;
+      color: #0f0;
+      font-size: 12px; /* Smaller text size // 小さい文字サイズ */
+      padding: 0 10px;
+      overflow: hidden; /* Hide overflow to avoid scrollbar // オーバーフローを隠してスクロールバーを回避 */
+      line-height: 1.2;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top row with state label and button // 上段：状態ラベルとボタン -->
+  <div id="topRow">
+    <div id="stateArea">Standby</div>
+    <button id="start">Start</button>
+  </div>
+  <!-- Recognition message area // 認識メッセージエリア -->
+  <div id="messageArea"></div>
+
+  <script>
+    // --- Speech Recognition functionality --- // 音声認識機能の実装
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!window.SpeechRecognition) {
+      document.getElementById("messageArea").innerText = "非対応 / Not Supported";
+    } else {
+      const recognition = new SpeechRecognition();
+      recognition.lang = "ja-JP";               // 言語設定 Language setting
+      recognition.continuous = true;            // 連続認識有効化 Enable continuous recognition
+      recognition.interimResults = false;       // 最終結果のみ のみを取得 Only final results
+
+      let isRecognizing = false;  // 認識中か否かのフラグ Flag for recognition state
+      let manualStop = false;     // ユーザーが手動で停止したか否かのフラグ Flag indicating manual stop state
+      let dotTimer = null;        // "." 追加タイマー Timer for adding "."
+
+      const stateArea = document.getElementById("stateArea");
+      const startButton = document.getElementById("start");
+      const messageArea = document.getElementById("messageArea");
+
+      // Start the dot timer: 0.5秒ごとに"."を追加 Start dot timer: add "." every 0.5 seconds
+      function startDotTimer() {
+        if (dotTimer) clearInterval(dotTimer);
+        messageArea.innerText = "";
+        dotTimer = setInterval(() => {
+          messageArea.innerText += ".";
+        }, 500);
+      }
+
+      // Stop the dot timer // ドットタイマーを停止
+      function stopDotTimer() {
+        if (dotTimer) {
+          clearInterval(dotTimer);
+          dotTimer = null;
+        }
+      }
+
+      recognition.onstart = function() {
+        stateArea.innerText = "Recognizing";
+        stateArea.style.color = "#0f0";
+        startDotTimer();
+      };
+
+      recognition.onresult = function(event) {
+        stopDotTimer();
+        const transcript = event.results[event.results.length - 1][0].transcript;
+        messageArea.innerText = transcript;
+        // Call the Python API to log and print the recognized transcript
+        // 認識結果をPython側でも出力するため、Python API (log_result) を呼び出す
+        if (window.pywebview && window.pywebview.api && window.pywebview.api.log_result) {
+          window.pywebview.api.log_result(transcript);
+        }
+      };
+
+      recognition.onerror = function(event) {
+        if (event.error === "no-speech") {
+          stopDotTimer();
+          messageArea.innerText = "";
+          startDotTimer();
+        } else {
+          stopDotTimer();
+          messageArea.innerText = "Error: " + event.error;
+        }
+      };
+
+      recognition.onend = function() {
+        if (!manualStop && isRecognizing) {
+          recognition.start();
+        } else {
+          isRecognizing = false;
+          stateArea.innerText = "Standby";
+          stateArea.style.color = "gray";
+          startButton.innerText = "Start";
+          stopDotTimer();
+        }
+      };
+
+      startButton.addEventListener("click", function() {
+        if (isRecognizing) {
+          manualStop = true;
+          recognition.stop();
+        } else {
+          manualStop = false;
+          recognition.start();
+          isRecognizing = true;
+          startButton.innerText = "Stop";
+        }
+      });
+    }
+  </script>
+</body>
+</html> 

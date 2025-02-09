@@ -1,0 +1,17 @@
+[project]
+name = "ccw"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pyautogui>=0.9.54",
+    "pyperclip>=1.9.0",
+    "pywebview>=5.4",
+    "pyyaml>=6.0.2",
+]
+
+[project.scripts]
+# When the user runs the 'ccw' command, the main function of ccw/speech.py will be executed.
+# ユーザーが 'ccw' コマンドを実行した際、 ccw/speech.py の main メソッドが実行されます。
+ccw = "ccw.speech:main"
