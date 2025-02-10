@@ -1,6 +1,16 @@
-# 音声認識自動化ソフトウェア 🎤🚀
+# CCW (Counter Clock Wise) 🎤🚀
 
-これは、Cursor、Cline、Windsurf 環境で利用しやすい無料の音声連続入力ソフトです。音声コマンドでユーザーインターフェース操作やテキスト入力を自動化するスムーズな体験を提供します。
+CCWは **Cursor, Cline, Windsurf** の頭文字を取った名称であり、このソフトウェアは無料で音声入力を連続的に行い、テキスト入力の自動化やユーザーインターフェース操作を支援するツールです。
+
+## 概要 🔍
+- **ソフトウェア名称:** CCW (Counter Clock Wise)  
+  *CCWはCursor、Cline、Windsurfを意味します。*
+- **操作概要:**  
+  - **起動方法:** コマンドラインで `ccw` コマンドを実行して起動します。
+  - **WebView起動:** WebViewウィンドウが起動され、音声認識のためにSpeech APIが有効化されます。
+  - **連続音声入力:** 画面上部で連続的に音声入力が行われます。
+  - **テキスト入力支援:** 認識されたテキストは、設定ファイルに指定された場所に自動的に貼り付けられます。
+  - **トリガーワードによる改行:** 音声入力に指定のトリガーワード（例：「エンター」）が含まれている場合、その文字列を削除し、改行（Enterキーのシミュレーション）を実行します。
 
 ## 特徴 🔥✨
 - **音声認識の統合**  
@@ -17,27 +27,27 @@
   *Enjoy the power of continuous voice input without any cost!*
 
 ## 使用技術 🛠️
-- **pywebview**: WebViewベースのインターフェース表示  
+- **pywebview:** WebViewベースのインターフェース表示  
   *For displaying a WebView-based interface.*
-- **pyautogui**: マウス・キーボード操作の自動化  
+- **pyautogui:** マウス・キーボード操作の自動化  
   *For automating mouse and keyboard operations.*
-- **pyperclip**: クリップボード操作  
+- **pyperclip:** クリップボード操作  
   *For clipboard functionalities.*
-- **PyYAML**: 設定ファイルの管理  
+- **PyYAML:** 設定ファイルの管理  
   *For managing configuration files.*
-- **Python**: 主な開発言語  
+- **Python:** 主な開発言語  
   *The primary programming language.*
 
 ## 始め方 🚀
 1. 必要なライブラリをインストールします:
     ```sh
-    pip install pywebview pyautogui pyperclip pyyaml
+    pip install ccw
     ```
-2. **設定ファイル (.ccw)**:  
+2. **設定ファイル (.ccw):**  
    ホームディレクトリにある `.ccw` ファイルを以下のセクションで作成または更新してください。**すべてのセクションは正常な動作のために維持する必要があります。**  
    *Create or update the .ccw file in your home directory with the following sections. All sections must be preserved for proper operation.*
    
-   - **ウィンドウ設定**:  
+   - **ウィンドウ設定:**  
      WebView の初期位置を指定します。  
      *Specifies the initial window position of the WebView.*
      ```yaml
@@ -46,7 +56,7 @@
          y: 10     # ウィンドウのY座標 (初期位置) // Initial window Y-coordinate
      ```
      
-   - **カーソル設定**:  
+   - **カーソル設定:**  
      自動クリックや貼り付け動作で使用するカーソルの位置を指定します。  
      *Specifies the cursor position used for automated mouse movement, click, and paste actions.*
      ```yaml
@@ -55,9 +65,9 @@
          y: 932    # カーソルのY座標 // Cursor Y position
      ```
      
-   - **キーワード設定**:  
+   - **キーワード設定:**  
      認識された音声メッセージ中で使用するトリガーキーワード（例：「エンター」）を指定します。  
-     このキーワードが含まれている場合、該当部分が削除され、残りのテキストが貼り付けられた後、Enterキーがシミュレートされます。  
+     このキーワードが含まれている場合、該当部分が削除され、残りのテキストが貼り付けられた後、Enterキーがシミュレーションされます。  
      *Specifies the trigger keyword used in the recognized speech message. If the recognized message contains this trigger (e.g., "エンター"), the trigger is removed, the remaining text is pasted, and an Enter key is simulated.*
      ```yaml
      keyword:
@@ -74,4 +84,7 @@
 ---
 
 この素晴らしいツールをぜひご利用ください！ 😄🎉✨  
-*Have fun using this awesome tool!* 
+*Have fun using this awesome tool!*
+
+# ICON
+https://www.flaticon.com/free-icon/mic_4787623?related_id=4787614&origin=search 
